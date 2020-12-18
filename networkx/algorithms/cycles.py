@@ -336,7 +336,7 @@ def recursive_simple_cycles(G):
     return result
 
 
-def find_cycle(G, source=None, orientation=None):
+def find_cycle(G, source=None, orientation=None, find_shortest=False):
     """Returns a cycle found via depth-first traversal.
 
     The cycle is a list of edges indicating the cyclic path.
@@ -436,7 +436,12 @@ def find_cycle(G, source=None, orientation=None):
         active_nodes = {start_node}
         previous_head = None
 
-        for edge in nx.edge_dfs(G, start_node, orientation):
+        if find_shortest:
+            edge_traversal_list = nx.edge_bfs(G, start_node, orientation)
+        else:
+            edge_traversal_list = nx.edge_dfs(G, start_node, orientation)
+        
+        for edge in edge_traversal_list:
             # Determine if this edge is a continuation of the active path.
             tail, head = tailhead(edge)
             if head in explored:
